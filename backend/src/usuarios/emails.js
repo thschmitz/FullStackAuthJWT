@@ -5,5 +5,12 @@ const nodemailer = require("nodemailer");
 
 function enviaEmail(destinatario) {
     const contaTeste = await nodemailer.createTestAccount();
+    const transportador = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        auth: contaTeste,
+    })
 
+    transportador.sendMail({
+        from: '"Blog do Codigo" noreply@blogdocodigo.com.br>'
+    })
 }
