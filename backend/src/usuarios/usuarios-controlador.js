@@ -2,6 +2,8 @@ const Usuario = require('./usuarios-modelo');
 const { InvalidArgumentError, InternalServerError } = require('../erros');
 const tokens = require("./tokens")
 
+const {EmailVerificacao} = require("./emails");
+
 function getTokenFromHeaders(req) {
   const authHeader = req.headers['x-authorization'] || req.headers['authorization'] || '';
   const token = authHeader?.split(' ')[authHeader?.split(' ').length - 1];
@@ -20,7 +22,10 @@ module.exports = {
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
 
-      console.log("UsuarioBACK: ", resposta)
+      const emailVerificacao = new EmailVerificacao(usuario, endereco);
+      emailVerificacao.enviaEmail().catch(console.log)
+
+      console.log("UsuarioBACK: ", usuario)
       res.status(201).json(usuario);
     } catch (erro) {
       if (erro instanceof InvalidArgumentError) {
