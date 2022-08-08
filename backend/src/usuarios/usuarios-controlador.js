@@ -1,7 +1,5 @@
 const Usuario = require('./usuarios-modelo');
 const { InvalidArgumentError, InternalServerError } = require('../erros');
-const blacklist = require("../../redis/blacklist-access-token");
-
 const tokens = require("./tokens")
 
 function getTokenFromHeaders(req) {
@@ -52,7 +50,7 @@ module.exports = {
   logout: async (req, res) => {
     try{
       const token = req.token;
-      await blacklist.adiciona(token);
+      await tokens.access.invalida(token);
       res.status(204).send();
     } catch(erro) {
       res.status(500).json({erro: erro.message})

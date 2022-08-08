@@ -1,12 +1,8 @@
 const passport = require('passport');
 const Usuario = require("./usuarios-modelo");
-const allowlistRefreshToken = require("../../redis/allowlist-refresh-token");
-
 const tokens = require("./tokens");
 
-async function invalidaRefreshToken(refreshToken) {
-  await allowlistRefreshToken.deleta(refreshToken);
-}
+
 
 module.exports = {
   local: (req, res, next) => {
@@ -66,7 +62,7 @@ module.exports = {
     try{
       const {refresh_token} = req.body;
       const id = await tokens.refresh.verifica(refresh_token);
-      await invalidaRefreshToken(refresh_token)
+      await tokens.refresh.invalida(refresh_token)
       req.user = await Usuario.buscaPorId(id);
       return next();
     } catch(erro) {

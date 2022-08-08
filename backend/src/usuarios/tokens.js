@@ -31,6 +31,10 @@ async function verificaTokenOpaco(token, nome, allowlist) {
     return id;
 }
 
+async function invalidaTokenOpaco(token, allowlist) {
+    await allowlist.deleta(token);
+}
+
 function verificaTokenValido(id, nome) {
     if (!id) {
         throw new InvalidArgumentError(`${nome} inválido`);
@@ -43,6 +47,12 @@ function verificaTokenEnviado(token, nome) {
     }
 }
 
+async function verificaTokenJWT(token, nome,  blacklist) {
+    await verificaTokenNaBlacklist(token, blacklist);
+    const {id} = jwt.verify(token, process.env.CHAVE_JWT);
+    return id;
+}
+
 async function verificaTokenNaBlacklist(token, blacklist) {
     const tokenNaBlacklist = await blacklist.contemToken(token);
     if (tokenNaBlacklist) {
@@ -50,10 +60,8 @@ async function verificaTokenNaBlacklist(token, blacklist) {
     }
 }
 
-async function verificaTokenJWT(token, nome,  blacklist) {
-    await verificaTokenNaBlacklist(token, blacklist);
-    const {id} = jwt.verify(token, process.env.CHAVE_JWT);
-    return id;
+function invalidaTokenJWT(token, blacklist) {
+    return blacklist.adiciona(token);
 }
 
 module.exports = {
@@ -66,7 +74,11 @@ module.exports = {
         },
         verifica(token) {
             return verificaTokenJWT(token, this.nome, this.lista);
+        },
+        invalida(token) {
+            return invalidaTokenJWT(token, this.lista);
         }
+
     },
     refresh: {
         nome: "refresh token",
@@ -77,6 +89,9 @@ module.exports = {
         },
         verifica(token) {
             return verificaTokenOpaco(token, this.nome, this.lista)
+        },
+        invalida(token) {
+            return invalidaTokenOpaco(token, this.lista);
         }
     }
 }
