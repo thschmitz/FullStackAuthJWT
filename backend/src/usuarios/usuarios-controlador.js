@@ -10,6 +10,11 @@ function getTokenFromHeaders(req) {
   return token;
 }
 
+function geraEndereco(rota, id) {
+  const baseURL = process.env.BASE_URL;
+  return `http://${baseURL}${rota}${id}`;
+}
+
 module.exports = {
   adiciona: async (req, res) => {
     const { nome, email, senha } = req.body;
@@ -21,6 +26,7 @@ module.exports = {
       });
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
+      const endereco = geraEndereco('/usuarios/verifica-email/', usuario.id);
 
       const emailVerificacao = new EmailVerificacao(usuario, endereco);
       emailVerificacao.enviaEmail().catch(console.log)
