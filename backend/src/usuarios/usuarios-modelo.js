@@ -9,6 +9,7 @@ class Usuario {
     this.nome = usuario.nome;
     this.email = usuario.email;
     this.senhaHash = usuario.senhaHash;
+    this.emailVerificado = usuario.emailVerificado;
 
     this.valida();
   }
@@ -56,6 +57,11 @@ class Usuario {
     }
 
     return new Usuario(usuario);
+  }
+
+  async verificaEmail() {
+    this.emailVerificado = true;
+    await usuariosDao.modificaEmailVerificado(this, this.emailVerificado);
   }
 
   static lista() {
