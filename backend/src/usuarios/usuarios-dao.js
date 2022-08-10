@@ -101,7 +101,7 @@ module.exports = {
 
   modificaEmailVerificado: async (usuario, emailVerificado) => {
     try{
-      await dbRun("UPDATE usuarios SET emailVerificado = ? WHERE id = ?", [emailVerificado, usuario.id]);
+      await dbRun(`UPDATE usuarios SET emailVerificado = ? WHERE id = ?`, [emailVerificado, usuario.id]);
     }catch(erro) {
       throw new InternalServerError('Erro ao modificar o email verificado');
     }

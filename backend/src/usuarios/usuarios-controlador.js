@@ -27,7 +27,7 @@ module.exports = {
       });
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
-      const endereco = geraEndereco('/usuarios/verifica-email/', usuario.id);
+      const endereco = geraEndereco('/usuario/verifica_email/', usuario.id);
 
       const emailVerificacao = new EmailVerificacao(usuario, endereco);
       emailVerificacao.enviaEmail().catch(console.log)
@@ -42,6 +42,17 @@ module.exports = {
       } else {
         res.status(500).json({ erro: erro.message });
       }
+    }
+  },
+
+  verificaEmail: async(req, res) => {
+    try{
+      console.log("ID: ", req.params.id)
+      const usuario = await Usuario.buscaPorId(req.params.id);
+      await usuario.verificaEmail();
+      res.status(200).json();
+    }catch(erro) {
+      res.status(500).json({erro: erro.message})
     }
   },
 
