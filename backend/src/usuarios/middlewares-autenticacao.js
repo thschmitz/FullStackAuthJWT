@@ -72,11 +72,12 @@ module.exports = {
     }
   },
 
-  async verificacaoEmail(req, res, next) {
+  verificacaoEmail: async (req, res, next) => {
     try{
-      const {token} = req.params;
-      const id = await tokens.verificacaoEmail.verifica(token);
-      const usuario = await Usuario.buscaPorId(id);
+      console.log(req)
+      const { token } = req.params;
+      console.log("TOKEN: ", token)
+      const usuario = await Usuario.buscaPorId(token);
       req.user = usuario;
       next();
     } catch(erro) {

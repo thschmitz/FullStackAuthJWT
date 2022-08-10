@@ -112,6 +112,7 @@ module.exports = {
       ]);
     } catch(erro) {
       console.log(erro)
+      throw new InternalServerError('Erro ao modificar a verficação de e-mail!');
     }
   }
 };

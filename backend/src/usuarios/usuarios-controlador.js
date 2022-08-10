@@ -12,7 +12,7 @@ function getTokenFromHeaders(req) {
 
 function geraEndereco(rota, token) {
   const baseURL = process.env.BASE_URL;
-  return `http://${baseURL}${rota}${token}`;
+  return `${baseURL}${rota}${token}`;
 }
 
 module.exports = {
@@ -34,7 +34,6 @@ module.exports = {
       const emailVerificacao = new EmailVerificacao(usuario, endereco);
       emailVerificacao.enviaEmail().catch(console.log)
 
-      console.log("UsuarioBACK: ", usuario)
       res.status(201).json(usuario);
     } catch (erro) {
       if (erro instanceof InvalidArgumentError) {
@@ -49,10 +48,12 @@ module.exports = {
 
   verificaEmail: async(req, res) => {
     try{
-      const usuario = await Usuario.buscaPorId(req.params.id);
+      const usuario = req.user;
+      console.log("USUARIO: ", usuario);
       await usuario.verificaEmail();
-      res.status(200).json();
+      res.status(201).json();
     } catch(erro) {
+      console.log("Problema: ", erro)
       res.status(500).json({erro: erro.message})
     }
   },
