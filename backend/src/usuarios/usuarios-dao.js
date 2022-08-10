@@ -1,5 +1,10 @@
 const db = require('../../database');
 const { InternalServerError } = require('../erros');
+const { promisify } = require('util');
+
+const dbRun = promisify(db.run).bind(db);
+const dbGet = promisify(db.get).bind(db);
+const dbAll = promisify(db.all).bind(db);
 
 module.exports = {
   adiciona: usuario => {
@@ -99,11 +104,14 @@ module.exports = {
     });
   },
 
-  modificaEmailVerificado: async (usuario, emailVerificado) => {
+  async modificaEmailVerificado(usuario, emailVerificado){
     try{
-      await dbRun(`UPDATE usuarios SET emailVerificado = ? WHERE id = ?`, [emailVerificado, usuario.id]);
-    }catch(erro) {
-      throw new InternalServerError('Erro ao modificar o email verificado');
+      await dbRun(`UPDATE usuarios SET emailVerificado = ? WHERE id = ?`, [
+        emailVerificado,
+        usuario.id
+      ]);
+    } catch(erro) {
+      console.log(erro)
     }
   }
 };

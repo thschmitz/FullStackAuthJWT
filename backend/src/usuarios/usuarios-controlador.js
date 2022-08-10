@@ -10,9 +10,9 @@ function getTokenFromHeaders(req) {
   return token;
 }
 
-function geraEndereco(rota, id) {
+function geraEndereco(rota, token) {
   const baseURL = process.env.BASE_URL;
-  return `http://${baseURL}${rota}${id}`;
+  return `http://${baseURL}${rota}${token}`;
 }
 
 module.exports = {
@@ -27,7 +27,9 @@ module.exports = {
       });
       await usuario.adicionaSenha(senha);
       await usuario.adiciona();
-      const endereco = geraEndereco('/usuario/verifica_email/', usuario.id);
+
+      const token = tokens.verificacaoEmail.cria(usuario.id);
+      const endereco = geraEndereco('/usuario/verifica_email/', token);
 
       const emailVerificacao = new EmailVerificacao(usuario, endereco);
       emailVerificacao.enviaEmail().catch(console.log)
@@ -47,11 +49,10 @@ module.exports = {
 
   verificaEmail: async(req, res) => {
     try{
-      console.log("ID: ", req.params.id)
       const usuario = await Usuario.buscaPorId(req.params.id);
       await usuario.verificaEmail();
       res.status(200).json();
-    }catch(erro) {
+    } catch(erro) {
       res.status(500).json({erro: erro.message})
     }
   },
