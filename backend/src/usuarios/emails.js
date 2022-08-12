@@ -3,16 +3,38 @@ const nodemailer = require("nodemailer");
 // Funcao de envio de emails
 // Nodemailer tem um modulo para conta teste e assim nao ficar enchendo a caixa de email de alguem
 
+const configuracaoEmailProducao = {
+    host: process.env.EMAIL_HOST,
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_SENHA,
+    },
+    secure: true,
+}
+
+const configuracaoEmailTeste = (contaTeste) => ({
+    host: 'smtp.ethereal.email',
+    auth: contaTeste,
+})
+
+async function criaConfiguracaoEmail() {
+    if(process.env.NODE_ENV === "production") {
+        return configuracaoEmailProducao;
+    } else {
+        const contaTeste = await nodemailer.createTestAccount();
+        return configuracaoEmailTeste(contaTeste);
+    }
+}
+
 class Email {
     async enviaEmail(usuario) {
-        const contaTeste = await nodemailer.createTestAccount();
-        const transportador = nodemailer.createTransport({
-            host: 'smtp.ethereal.email',
-            auth: contaTeste,
-        })
+        const configuracaoEmail = await criaConfiguracaoEmail();
+        const transportador = nodemailer.createTransport(configuracaoEmail)
         const info = await transportador.sendMail(this);
     
-        console.log("URL: ", nodemailer.getTestMessageUrl(info))
+        if(process.env.NODE_ENV === "production") {
+            console.log("URL: ", nodemailer.getTestMessageUrl(info))
+        }
     }
 }
 
