@@ -74,10 +74,11 @@ module.exports = {
 
   verificacaoEmail: async (req, res, next) => {
     try{
-      console.log(req)
       const { token } = req.params;
       console.log("TOKEN: ", token)
-      const usuario = await Usuario.buscaPorId(token);
+      const id = await tokens.verificacaoEmail.verifica(token);
+      const usuario = await Usuario.buscaPorId(id);
+      console.log("UsuarioAuth: ", usuario)
       req.user = usuario;
       next();
     } catch(erro) {

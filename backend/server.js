@@ -2,7 +2,7 @@ const app = require('./app');
 const port = 5000;
 const db = require('./database');
 require("dotenv").config();
-require("./redis/blacklist-access-token")
+require("./redis/blocklist-access-token")
 require("./redis/allowlist-refresh-token")
 
 app.use((req,res, next) => {

@@ -48,10 +48,11 @@ module.exports = {
 
   verificaEmail: async(req, res) => {
     try{
+      console.log(req)
       const usuario = req.user;
       console.log("USUARIO: ", usuario);
       await usuario.verificaEmail();
-      res.status(201).json();
+      res.status(200).json();
     } catch(erro) {
       console.log("Problema: ", erro)
       res.status(500).json({erro: erro.message})
