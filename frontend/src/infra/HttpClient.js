@@ -10,6 +10,7 @@ export async function Login(fetchUrl, fetchOptions) {
     'senha': `${fetchOptions.body.senha}`
   };
 
+  console.log("teste: ", details)
   var formBody = [];
   for (var property in details) {
     var encodedKey = encodeURIComponent(property);
@@ -28,7 +29,6 @@ export async function Login(fetchUrl, fetchOptions) {
     body: formBody
   };
 
-  console.log(options.body)
 
   return fetch(fetchUrl, options)
     .then((respostaDoServidor) => {

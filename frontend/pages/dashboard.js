@@ -1,4 +1,4 @@
-import { Popover, Transition } from '@headlessui/react'
+import { Popover, Transition } from '@headlessui/react';
 import {
   BookmarkAltIcon,
   CalendarIcon,
@@ -11,15 +11,15 @@ import {
   ShieldCheckIcon,
   SupportIcon,
   ViewGridIcon,
-  XIcon,
-} from '@heroicons/react/outline'
-import { ChevronDownIcon } from '@heroicons/react/solid'
-import React, {useState, Fragment} from 'react'
-import {withSession} from "../src/auth/session";
-import { tokenService } from '../src/auth/tokenService';
+  XIcon
+} from '@heroicons/react/outline';
+import { ChevronDownIcon } from '@heroicons/react/solid';
 import Avatar from '@mui/material/Avatar';
 import { deepOrange, deepPurple } from '@mui/material/colors';
-import Link from "next/link"
+import Link from "next/link";
+import React, { Fragment, useState } from 'react';
+import { withSession } from "../src/auth/session";
+import { tokenService } from '../src/auth/tokenService';
 
 
 export const getServerSideProps = withSession((ctx) => {
@@ -33,7 +33,7 @@ export const getServerSideProps = withSession((ctx) => {
 const Dashboard = (props) => {
 
     const usuario = props.session.usuarioInfo;
-    console.log(usuario)
+    console.log("UsuarioDash: ", usuario)
   
   
     function handleLogout(e) {
@@ -54,7 +54,7 @@ const Dashboard = (props) => {
             Welcome to the Dashboard
           </h1>
           <h1 className="text-3xl font-bold text-center">
-            {usuario.nome}
+            {user.nome}
           </h1>
         </div>
         <div className="mt-20 max-w-lg w-full cursor-pointer flex items-center justify-center px-4 py-2 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700">

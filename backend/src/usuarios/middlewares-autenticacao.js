@@ -8,6 +8,7 @@ module.exports = {
       'local',
       { session: false },
       (erro, usuario, info) => {
+        console.log("UsuarioAuth: ", usuario);
         if (erro && erro.name === 'InvalidArgumentError') {
           return res.status(401).json({ erro: erro.message });
         }
