@@ -1,5 +1,5 @@
-import {Login, Session, CreateAccount, CreatePost} from "../infra/HttpClient.js";
-import {tokenService} from "./tokenService.js"
+import { AtualizaToken, CreateAccount, CreatePost, Login, Session } from "../infra/HttpClient.js";
+import { tokenService } from "./tokenService.js";
 
 export const authService = {
     async login(body) {
@@ -10,8 +10,8 @@ export const authService = {
             console.log("respostaLogin: ", respostaDoServidor)
 
             const user = respostaDoServidor.usuario;
-            tokenService.save(respostaDoServidor.token);
-
+            tokenService.saveAccessToken(respostaDoServidor.token);
+            tokenService.saveRefreshToken(respostaDoServidor.refreshToken);
             return user;
         })
     },
@@ -28,7 +28,7 @@ export const authService = {
     },
 
     async getSession(ctx = null) {
-        const token = tokenService.get(ctx);
+        const token = tokenService.getAccessToken(ctx);
         
         console.log("tokenFront: ", token)
         try {
@@ -37,12 +37,30 @@ export const authService = {
                 headers: {
                   'Authorization': `Bearer ${token}`
                 },
-              })
-              .then((response) => {
-                  console.log("authService: ", response)
-                  tokenService.save(response);
-                  return response;
-              })
+            })
+            .then(async (response) => {
+                console.log("authService: ", response)
+                if(response.erro === "jwt expired") {
+                    const refresh = tokenService.getRefreshToken(ctx);
+                    tokenService.deleteAccessToken(ctx);
+                    tokenService.deleteRefreshToken(ctx);
+                    return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualizaToken`, {
+                        method: 'POST',
+                        body: {
+                            refresh_token: refresh
+                        }
+                    }).then(async (response) => {
+                        console.log("authServiceNew: ", response)
+                        return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+                        })
+                    })
+                }
+                return response;
+            })
         } catch(erro) {
             console.log("erro: ", erro)
             return null;
@@ -51,7 +69,7 @@ export const authService = {
     },
     
     async getPosts(ctx=null) {
-        const token = tokenService.get(ctx);
+        const token = tokenService.getAccessToken(ctx);
 
         return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/post`, {
             method: 'GET',
@@ -66,7 +84,7 @@ export const authService = {
     },
     
     async createPost(body) {
-        const token = tokenService.get();
+        const token = tokenService.getAccessToken();
         console.log("TokenAuthService: ", token)
         console.log("authServicebody: ", body)
         return await CreatePost(`${process.env.NEXT_PUBLIC_BACKEND_URL}/post`, {
@@ -79,5 +97,5 @@ export const authService = {
             console.log("respostaSession: ", respostaDoServidor)
             return respostaDoServidor;
         })
-    }
+    },
 }

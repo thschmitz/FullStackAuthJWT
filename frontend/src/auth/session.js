@@ -8,7 +8,8 @@ export function withSession(funcao) {
       const session = await authService.getSession(ctx);
       console.log("SessionUser: ", session);
       if (session.erro === "jwt expired") {
-        tokenService.delete(ctx);
+        tokenService.deleteAccessToken(ctx);
+        tokenService.deleteRefreshToken(ctx);
         return {
           redirect: {
             permanent: false,
@@ -18,7 +19,7 @@ export function withSession(funcao) {
       }
 
       if (session.erro === "jwt malformed") {
-        tokenService.delete(ctx);
+        tokenService.deleteAccessToken(ctx);
         return {
           redirect: {
             permanent: false,
@@ -47,7 +48,6 @@ export function posts(funcao) {
       const session = await authService.getSession(ctx);
       console.log("SessionUser: ", session);
       if (session.erro === "jwt expired") {
-        tokenService.delete(ctx);
         return {
           redirect: {
             permanent: false,
@@ -57,7 +57,7 @@ export function posts(funcao) {
       }
 
       if (session.erro === "jwt malformed") {
-        tokenService.delete(ctx);
+        tokenService.deleteAccessToken(ctx);
         return {
           redirect: {
             permanent: false,

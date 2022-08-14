@@ -1,5 +1,4 @@
 import nookies from 'nookies';
-
 // Ports & Adapters
 
 
@@ -36,6 +35,32 @@ export async function Login(fetchUrl, fetchOptions) {
     })
 }
 
+
+export async function AtualizaToken(fetchUrl, fetchOptions) {
+  var details = {
+    'refresh_token': `${fetchOptions.body.refresh_token}`
+  };
+
+  console.log("teste: ", details)
+  var formBody = [];
+  for (var property in details) {
+    var encodedKey = encodeURIComponent(property);
+    var encodedValue = encodeURIComponent(details[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
+
+  const defaultHeaders = fetchOptions.headers || {};
+  const options = {
+    ...fetchOptions,
+    headers: {
+      'Content-Type': "application/x-www-form-urlencoded;charset=UTF-8",
+      ...defaultHeaders,
+    },
+    body: formBody
+  };
+}
+
 export async function Session(fetchUrl, fetchOptions) {
   const defaultHeaders = fetchOptions.headers || {};
   const options = {
@@ -47,7 +72,7 @@ export async function Session(fetchUrl, fetchOptions) {
 
   return fetch(fetchUrl, options)
   .then((response) => {
-    const data = response.json()
+    const data = response.json();
     return data;
   }).then((data) => {
     console.log("HttpClient: ", data)

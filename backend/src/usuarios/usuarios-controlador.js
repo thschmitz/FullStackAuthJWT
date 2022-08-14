@@ -1,7 +1,7 @@
 const Usuario = require('./usuarios-modelo');
 const { InvalidArgumentError, InternalServerError } = require('../erros');
 const tokens = require("./tokens")
-
+const jwt = require("jsonwebtoken")
 const {EmailVerificacao} = require("./emails");
 
 function getTokenFromHeaders(req) {
@@ -99,8 +99,9 @@ module.exports = {
   },
 
   session: async(req, res) => {
-    console.log("Backend: ", req)
+    console.log("Backend: ", req.user)
     const token = getTokenFromHeaders(req);
+    console.log("TokenSession: ", token)
 
     try{
       await jwt.verify(token, process.env.CHAVE_JWT);

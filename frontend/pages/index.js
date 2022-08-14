@@ -1,13 +1,13 @@
-import Head from 'next/head'
-import { LockClosedIcon } from '@heroicons/react/solid'
-import {useRouter} from "next/router"
-import React, {useState} from 'react';
-import {authService} from "../src/auth/authService"
-import {tokenService} from "../src/auth/tokenService"
+import { LockClosedIcon } from '@heroicons/react/solid';
+import Head from 'next/head';
+import { useRouter } from "next/router";
+import React, { useState } from 'react';
+import { authService } from "../src/auth/authService";
+import { tokenService } from "../src/auth/tokenService";
 
 export default function Home() {
   const router = useRouter();
-  const token = tokenService.get(null)
+  const token = tokenService.getAccessToken(null)
 
   if(token){
     router.push("/dashboard")
