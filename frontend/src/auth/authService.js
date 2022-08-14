@@ -51,12 +51,7 @@ export const authService = {
                         }
                     }).then(async (response) => {
                         console.log("authServiceNew: ", response)
-                        return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${token}`
-                            },
-                        })
+                        return response
                     })
                 }
                 return response;

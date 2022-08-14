@@ -59,6 +59,12 @@ export async function AtualizaToken(fetchUrl, fetchOptions) {
     },
     body: formBody
   };
+
+  fetch(fetchUrl, options)
+  .then((respostaDoServidor) => {
+    console.log("HttpClienteRefreshToken: ", respostaDoServidor.json())
+    return respostaDoServidor.json();
+  })
 }
 
 export async function Session(fetchUrl, fetchOptions) {
