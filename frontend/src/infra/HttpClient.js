@@ -38,32 +38,23 @@ export async function Login(fetchUrl, fetchOptions) {
 
 export async function AtualizaToken(fetchUrl, fetchOptions) {
   var details = {
-    'refresh_token': `${fetchOptions.body.refresh_token}`
+    refresh_token: `${fetchOptions.body.refresh_token}`
   };
 
   console.log("teste: ", details)
-  var formBody = [];
-  for (var property in details) {
-    var encodedKey = encodeURIComponent(property);
-    var encodedValue = encodeURIComponent(details[property]);
-    formBody.push(encodedKey + "=" + encodedValue);
-  }
-  formBody = formBody.join("&");
 
-  const defaultHeaders = fetchOptions.headers || {};
   const options = {
-    ...fetchOptions,
+    method: 'POST',
     headers: {
-      'Content-Type': "application/x-www-form-urlencoded;charset=UTF-8",
-      ...defaultHeaders,
+      'Content-Type': "application/json",
     },
-    body: formBody
+    body: JSON.stringify(details)
   };
 
-  fetch(fetchUrl, options)
-  .then((respostaDoServidor) => {
-    console.log("HttpClienteRefreshToken: ", respostaDoServidor.json())
-    return respostaDoServidor.json();
+  fetch(fetchUrl, options).then((respostaDoServidor) => {
+    console.log("ENTROU AQUI PRIMEIRO")
+    console.log("HttpClientRefreshToken: ", respostaDoServidor)
+    return respostaDoServidor;
   })
 }
 
@@ -81,7 +72,6 @@ export async function Session(fetchUrl, fetchOptions) {
     const data = response.json();
     return data;
   }).then((data) => {
-    console.log("HttpClient: ", data)
     return data;
   })
 

@@ -7,6 +7,14 @@ export function withSession(funcao) {
       console.log("CTX: ", ctx.resolvedUrl);
       const session = await authService.getSession(ctx);
       console.log("SessionUser: ", session);
+      if (session.erro === "jwt expired") {
+        return {
+          redirect: {
+            permanent: false,
+            destination: "/",
+          },
+        };
+      }
 
       if (session.erro === "jwt malformed") {
         tokenService.deleteAccessToken(ctx);

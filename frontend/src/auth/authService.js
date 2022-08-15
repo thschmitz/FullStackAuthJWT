@@ -29,8 +29,10 @@ export const authService = {
 
     async getSession(ctx = null) {
         const token = tokenService.getAccessToken(ctx);
+        const refresh = tokenService.getRefreshToken(ctx);
         
         console.log("tokenFront: ", token)
+        console.log("RefreshService: ", refresh)
         try {
             return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
                 method: 'GET',
@@ -40,18 +42,20 @@ export const authService = {
             })
             .then(async (response) => {
                 console.log("authService: ", response)
-                if(response.erro === "jwt expired") {
-                    const refresh = tokenService.getRefreshToken(ctx);
+                if(response.erro) {
+                    console.log("Entrei na excessao")
                     tokenService.deleteAccessToken(ctx);
                     tokenService.deleteRefreshToken(ctx);
-                    return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualizaToken`, {
-                        method: 'POST',
+                    return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualiza_token`, {
                         body: {
                             refresh_token: refresh
                         }
-                    }).then(async (response) => {
-                        console.log("authServiceNew: ", response)
-                        return response
+                    }).then(respostaDoServidor => {
+
+                        console.log("respostaAtualizaToken: ", respostaDoServidor)
+                        tokenService.saveAccessToken(ctx);
+                        tokenService.saveRefreshToken(ctx);
+                        return respostaDoServidor;
                     })
                 }
                 return response;
