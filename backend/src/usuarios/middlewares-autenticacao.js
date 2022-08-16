@@ -66,6 +66,7 @@ module.exports = {
       req.user = await Usuario.buscaPorId(id);
       return next();
     } catch(erro) {
+      console.log("Problema AQUI 1")
       if(erro.name === "InvalidArgumentError") {
         return res.status(401).json({ erro: erro.message });
       } else {

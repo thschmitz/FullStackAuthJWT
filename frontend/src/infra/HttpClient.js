@@ -1,8 +1,6 @@
 import nookies from 'nookies';
 // Ports & Adapters
 
-
-
 export async function Login(fetchUrl, fetchOptions) {
   var details = {
     'email': `${fetchOptions.body.email}`,
@@ -51,9 +49,20 @@ export async function AtualizaToken(fetchUrl, fetchOptions) {
     body: JSON.stringify(details)
   };
 
-  fetch(fetchUrl, options).then((respostaDoServidor) => {
-    console.log("ENTROU AQUI PRIMEIRO")
-    console.log("HttpClientRefreshToken: ", respostaDoServidor)
+  console.log("OPTIONS: ", options)
+
+  fetch(fetchUrl, options).then(async (respostaDoServidor) => {
+    console.log("HttpClientRefreshToken: ", respostaDoServidor.headers.get("authorization"))
+    const access_token = respostaDoServidor.headers.get("authorization");
+    const refresh_token = respostaDoServidor.headers.get("refreshtoken");
+
+    const resultado = {
+      access_token, access_token,
+      refresh_token, refresh_token
+    }
+
+    console.log("Tentativa: ", resultado)
+
     return respostaDoServidor;
   })
 }

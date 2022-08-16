@@ -36,6 +36,7 @@ module.exports = {
 
       res.status(201).json(usuario);
     } catch (erro) {
+      console.log("Problema AQUI 2")
       if (erro instanceof InvalidArgumentError) {
         res.status(422).json({ erro: erro.message });
       } else if (erro instanceof InternalServerError) {
@@ -63,6 +64,7 @@ module.exports = {
     const access_token = tokens.access.cria(req.user.id);
     const refreshToken = await tokens.refresh.cria(req.user.id);
     res.set("Authorization", access_token);
+    res.set("RefreshToken", refreshToken)
 
     const resposta = {
       token: access_token,
@@ -70,7 +72,9 @@ module.exports = {
       refreshToken: refreshToken
     }
 
-    res.status(200).send(resposta);
+    console.log("REQResposta: ", resposta)
+
+    res.status(200).json(resposta);
   },
 
   logout: async (req, res) => {

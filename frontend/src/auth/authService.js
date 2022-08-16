@@ -1,6 +1,8 @@
 import { AtualizaToken, CreateAccount, CreatePost, Login, Session } from "../infra/HttpClient.js";
 import { tokenService } from "./tokenService.js";
 
+
+
 export const authService = {
     async login(body) {
         return await Login(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/login`, {
@@ -44,17 +46,16 @@ export const authService = {
                 console.log("authService: ", response)
                 if(response.erro) {
                     console.log("Entrei na excessao")
+
                     tokenService.deleteAccessToken(ctx);
                     tokenService.deleteRefreshToken(ctx);
                     return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualiza_token`, {
                         body: {
                             refresh_token: refresh
                         }
-                    }).then(respostaDoServidor => {
-
+                    }).then(async (respostaDoServidor) => {
                         console.log("respostaAtualizaToken: ", respostaDoServidor)
-                        tokenService.saveAccessToken(ctx);
-                        tokenService.saveRefreshToken(ctx);
+
                         return respostaDoServidor;
                     })
                 }
@@ -62,7 +63,7 @@ export const authService = {
             })
         } catch(erro) {
             console.log("erro: ", erro)
-            return null;
+            return erro;
         }
 
     },
@@ -92,7 +93,7 @@ export const authService = {
             headers: {
                 'Authorization': `Bearer ${token}`
             },
-        }).then(respostaDoServidor => {
+        }).then(async(respostaDoServidor) => {
             console.log("respostaSession: ", respostaDoServidor)
             return respostaDoServidor;
         })

@@ -31,7 +31,7 @@ export const getServerSideProps = withSession((ctx) => {
 })
 
 const Dashboard = (props) => {
-
+    console.log(props)
     const usuario = props.session.usuarioInfo;
   
   
