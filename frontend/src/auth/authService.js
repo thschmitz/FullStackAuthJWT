@@ -33,8 +33,6 @@ export const authService = {
         const token = tokenService.getAccessToken(ctx);
         const refresh = tokenService.getRefreshToken(ctx);
         
-        console.log("tokenFront: ", token)
-        console.log("RefreshService: ", refresh)
         try {
             return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
                 method: 'GET',
@@ -43,20 +41,24 @@ export const authService = {
                 },
             })
             .then(async (response) => {
-                console.log("authService: ", response)
                 if(response.erro) {
-                    console.log("Entrei na excessao")
-
                     tokenService.deleteAccessToken(ctx);
                     tokenService.deleteRefreshToken(ctx);
                     return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualiza_token`, {
                         body: {
                             refresh_token: refresh
                         }
-                    }).then(async (respostaDoServidor) => {
-                        console.log("respostaAtualizaToken: ", respostaDoServidor)
-
-                        return respostaDoServidor;
+                    }).then(async (res) => {
+                        console.log("Teste: ", res)
+                        return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
+                            method: 'GET',
+                            headers: {
+                              'Authorization': `Bearer ${res.access_token}`
+                            },
+                        }).then(respostaLogin => {
+                            console.log(respostaLogin)
+                            return respostaLogin;
+                        })
                     })
                 }
                 return response;

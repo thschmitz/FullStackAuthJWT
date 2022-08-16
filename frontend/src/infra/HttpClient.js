@@ -1,6 +1,7 @@
 import nookies from 'nookies';
 // Ports & Adapters
 
+
 export async function Login(fetchUrl, fetchOptions) {
   var details = {
     'email': `${fetchOptions.body.email}`,
@@ -39,8 +40,6 @@ export async function AtualizaToken(fetchUrl, fetchOptions) {
     refresh_token: `${fetchOptions.body.refresh_token}`
   };
 
-  console.log("teste: ", details)
-
   const options = {
     method: 'POST',
     headers: {
@@ -49,22 +48,26 @@ export async function AtualizaToken(fetchUrl, fetchOptions) {
     body: JSON.stringify(details)
   };
 
-  console.log("OPTIONS: ", options)
+  try{
+    return fetch(fetchUrl, options)
+    .then(async (respostaDoServidor) => {
+      const access_token = respostaDoServidor.headers.get("authorization");
+      const refresh_token = respostaDoServidor.headers.get("refreshtoken");
+  
+      const resultado = {
+        access_token: access_token,
+        refresh_token: refresh_token
+      }
+  
+      return resultado;
+    })
 
-  fetch(fetchUrl, options).then(async (respostaDoServidor) => {
-    console.log("HttpClientRefreshToken: ", respostaDoServidor.headers.get("authorization"))
-    const access_token = respostaDoServidor.headers.get("authorization");
-    const refresh_token = respostaDoServidor.headers.get("refreshtoken");
+  } catch(erro) {
+    console.log("erroAtualizacaoTokens: ", erro)
+    return erro;
+  }
 
-    const resultado = {
-      access_token, access_token,
-      refresh_token, refresh_token
-    }
 
-    console.log("Tentativa: ", resultado)
-
-    return respostaDoServidor;
-  })
 }
 
 export async function Session(fetchUrl, fetchOptions) {
