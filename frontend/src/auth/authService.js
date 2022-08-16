@@ -44,19 +44,23 @@ export const authService = {
                 if(response.erro) {
                     tokenService.deleteAccessToken(ctx);
                     tokenService.deleteRefreshToken(ctx);
+                    
                     return await AtualizaToken(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/atualiza_token`, {
                         body: {
                             refresh_token: refresh
                         }
                     }).then(async (res) => {
                         console.log("Teste: ", res)
+                        
+                        tokenService.saveAccessToken(res.access_token, ctx);
+                        tokenService.saveRefreshToken(res.refresh_token, ctx);
                         return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/usuario/session`, {
                             method: 'GET',
                             headers: {
                               'Authorization': `Bearer ${res.access_token}`
                             },
                         }).then(respostaLogin => {
-                            console.log(respostaLogin)
+                            console.log("respostaRelogin: ", respostaLogin)
                             return respostaLogin;
                         })
                     })
