@@ -41,7 +41,7 @@ export const authService = {
                 },
             })
             .then(async (response) => {
-                if(response.erro) {
+                if(response.erro === "jwt expired") {
                     tokenService.deleteAccessToken(ctx);
                     tokenService.deleteRefreshToken(ctx);
                     

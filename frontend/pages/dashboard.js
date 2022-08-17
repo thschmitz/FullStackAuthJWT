@@ -1,21 +1,3 @@
-import { Popover, Transition } from '@headlessui/react';
-import {
-  BookmarkAltIcon,
-  CalendarIcon,
-  ChartBarIcon,
-  CursorClickIcon,
-  MenuIcon,
-  PhoneIcon,
-  PlayIcon,
-  RefreshIcon,
-  ShieldCheckIcon,
-  SupportIcon,
-  ViewGridIcon,
-  XIcon
-} from '@heroicons/react/outline';
-import { ChevronDownIcon } from '@heroicons/react/solid';
-import Avatar from '@mui/material/Avatar';
-import { deepOrange, deepPurple } from '@mui/material/colors';
 import Link from "next/link";
 import React, { Fragment, useState } from 'react';
 import { withSession } from "../src/auth/session";
@@ -25,22 +7,23 @@ import { tokenService } from '../src/auth/tokenService';
 export const getServerSideProps = withSession((ctx) => {
   return {
     props: {
-      session: ctx,
+      session: ctx.req.session,
     }
   }
 })
 
 const Dashboard = (props) => {
     console.log(props)
+
     const usuario = props.session.usuarioInfo;
   
   
     function handleLogout(e) {
       e.preventDefault();
       try{
+        window.location.href = "/"
         tokenService.deleteAccessToken(props.ctx)
         tokenService.deleteRefreshToken(props.ctx)
-        window.location.reload()
   
       } catch(erro){
         console.log(erro)
