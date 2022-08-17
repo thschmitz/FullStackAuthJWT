@@ -37,33 +37,19 @@ export function posts(funcao) {
       console.log("CTX: ", ctx.resolvedUrl);
       const session = await authService.getSession(ctx);
       console.log("SessionUser: ", session);
-      if (session.erro === "jwt expired") {
-        return {
-          redirect: {
-            permanent: false,
-            destination: "/",
-          },
+
+      if(session.usuarioInfo) {
+        const posts = await authService.getPosts(ctx);
+        const data = {
+          session,
+          posts,
         };
+  
+        return funcao(data);
       }
 
-      if (session.erro === "jwt malformed") {
-        tokenService.deleteAccessToken(ctx);
-        return {
-          redirect: {
-            permanent: false,
-            destination: "/",
-          },
-        };
-      }
+      return ctx.redirect("/?error=401");
 
-      const posts = await authService.getPosts(ctx);
-
-      const data = {
-        session,
-        posts,
-      };
-
-      return funcao(data);
     } catch (error) {
       console.log(error);
       return {

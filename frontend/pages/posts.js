@@ -1,6 +1,6 @@
 import Link from "next/link"
 import React from 'react'
-import {posts} from "../src/auth/session"
+import { posts } from "../src/auth/session"
 
 export const getServerSideProps = posts((ctx) => {
   return {
@@ -16,9 +16,7 @@ export const getServerSideProps = posts((ctx) => {
 const Post = (props) => {
   const posts = props.data.posts.posts
   console.log(posts)
-  posts.map((post) => {
-    console.log(post)
-  })
+
   return (
     <>
       <Link href="/dashboard"><button className="bg-blue-500 rounded-full p-2 text-white m-4 cursor-pointer">Voltar</button></Link>

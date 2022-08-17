@@ -77,6 +77,8 @@ export const authService = {
     async getPosts(ctx=null) {
         const token = tokenService.getAccessToken(ctx);
 
+        console.log("Token: ", token)
+
         return await Session(`${process.env.NEXT_PUBLIC_BACKEND_URL}/post`, {
             method: 'GET',
             headers: {
