@@ -1,9 +1,9 @@
-import Head from 'next/head'
-import {useRouter} from "next/router"
-import React, {useState} from 'react';
-import {authService} from "../src/auth/authService"
-import {tokenService} from "../src/auth/tokenService"
-import Link from "next/link"
+import Head from 'next/head';
+import Link from "next/link";
+import { useRouter } from "next/router";
+import React, { useState } from 'react';
+import { authService } from "../src/auth/authService";
+import { tokenService } from "../src/auth/tokenService";
 
 export default function Home() {
   const router = useRouter();
@@ -44,17 +44,7 @@ export default function Home() {
             />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create you own post !</h2>
           </div>
-          <form className="mt-8 space-y-6" onSubmit={async (event)=> {
-            event.preventDefault();
-            
-            authService.createPost({
-              title:values.title,
-              content:values.content
-            }).then((resposta) => {
-              console.log("RESPOSTALOGIN: ", resposta)
-              router.push("/dashboard");
-            }) 
-          }}>
+          <form className="mt-8 space-y-6">
             <input type="hidden" name="remember" defaultValue="true" />
             <div className="rounded-md shadow-sm -space-y-px">
               <div>
@@ -92,6 +82,17 @@ export default function Home() {
             <div>
               <button
                 type="submit"
+                onClick={async (event)=> {
+                  event.preventDefault();
+                  
+                  authService.createPost({
+                    title:values.title,
+                    content:values.content
+                  }).then((resposta) => {
+                    console.log("RESPOSTALOGIN: ", resposta)
+                    router.push("/dashboard");
+                  }) 
+                }}
                 className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
                 Create Post

@@ -71,7 +71,7 @@ module.exports = {
   access: {
     nome: 'access token',
     lista: blocklistAccessToken,
-    expiracao: [5, 's'],
+    expiracao: [2, 's'],
     cria(id) {
       return criaTokenJWT(id, this.expiracao);
     },
