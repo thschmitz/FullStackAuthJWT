@@ -22,6 +22,7 @@ module.exports = {
 
   lista: async (req, res) => {
     try {
+      console.log("Dentro de lista")
       const posts = await Post.lista();
       res.send(posts);
     } catch (erro) {

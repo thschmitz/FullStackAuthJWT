@@ -36,19 +36,16 @@ export function posts(funcao) {
     try {
       console.log("CTX: ", ctx.resolvedUrl);
       const session = await authService.getSession(ctx);
-      console.log("SessionUser: ", session);
+      console.log("SessionUser2: ", session);
 
-      if(session.usuarioInfo) {
-        const posts = await authService.getPosts(ctx);
-        const data = {
-          session,
-          posts,
-        };
-  
-        return funcao(data);
-      }
+      const posts = await authService.getPosts(ctx);
+      const data = {
+        session,
+        posts,
+      };
 
-      return ctx.redirect("/?error=401");
+      return funcao(data);
+
 
     } catch (error) {
       console.log(error);

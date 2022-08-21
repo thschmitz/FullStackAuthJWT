@@ -72,12 +72,16 @@ export async function AtualizaToken(fetchUrl, fetchOptions) {
 
 export async function Session(fetchUrl, fetchOptions) {
   const defaultHeaders = fetchOptions.headers || {};
+  console.log("headers: ", defaultHeaders)
   const options = {
     ...fetchOptions,
     headers: {
       ...defaultHeaders,
     }
   };
+
+  console.log("options: ", options)
+
 
   return fetch(fetchUrl, options)
   .then((response) => {

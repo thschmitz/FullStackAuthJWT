@@ -74,7 +74,7 @@ module.exports = {
 
     console.log("REQResposta: ", resposta)
 
-    res.status(200).json(resposta);
+    res.status(200).send(resposta);
   },
 
   logout: async (req, res) => {

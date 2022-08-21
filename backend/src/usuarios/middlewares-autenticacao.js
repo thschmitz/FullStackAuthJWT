@@ -51,6 +51,7 @@ module.exports = {
           return res.status(401).json();
         }
 
+        console.log("PASSOU")
         req.token = info.token;
         req.user = usuario;
         return next();
@@ -66,13 +67,13 @@ module.exports = {
       req.user = await Usuario.buscaPorId(id);
       return next();
     } catch(erro) {
-      console.log("Problema AQUI 1")
       if(erro.name === "InvalidArgumentError") {
         return res.status(401).json({ erro: erro.message });
       } else {
         return res.status(500).json({erro: erro.message});
       }
     }
+
   },
 
   verificacaoEmail: async (req, res, next) => {
@@ -83,7 +84,7 @@ module.exports = {
       const usuario = await Usuario.buscaPorId(id);
       console.log("UsuarioAuth: ", usuario)
       req.user = usuario;
-      next();
+      return next();
     } catch(erro) {
       if(erro.name === "JsonWebTokenError") {
         return res.status(401).json({ erro: erro.message });
