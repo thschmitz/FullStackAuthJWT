@@ -3,9 +3,17 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from 'react';
 import { authService } from "../src/auth/authService";
-import { tokenService } from "../src/auth/tokenService";
+import { withSession } from "../src/auth/session";
 
-export default function Home() {
+export const getServerSideProps = withSession((ctx) => {
+  return {
+    props: {
+      session: ctx.req.session,
+    }
+  }
+})
+
+export default function Home(props) {
   const router = useRouter();
 
   const [values, setValues] = useState({
