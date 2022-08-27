@@ -34,18 +34,22 @@ export function withSession(funcao) {
 export function posts(funcao) {
   return async (ctx) => {
     try {
-      console.log("CTX: ", ctx.resolvedUrl);
       const session = await authService.getSession(ctx);
       console.log("SessionUser2: ", session);
-
-      const posts = await authService.getPosts(ctx);
-      const data = {
-        session,
-        posts,
-      };
-
-      return funcao(data);
-
+      if(session.usuarioInfo) {
+        const posts = await authService.getPosts(ctx);
+        const modifiedCtx = {
+          ...ctx,
+          req: {
+            ...ctx.req,
+            session,
+            posts,
+          }
+        }
+        return funcao(modifiedCtx)
+      } else {
+        return ctx.redirect("/?error=401");
+      }
 
     } catch (error) {
       console.log(error);

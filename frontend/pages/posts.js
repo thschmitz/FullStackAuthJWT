@@ -5,17 +5,14 @@ import { posts } from "../src/auth/session"
 export const getServerSideProps = posts((ctx) => {
   return {
     props: {
-      data: {
-        session: ctx,
-        posts: ctx,
-      }
+      session: ctx.req.session,
+      posts: ctx.req.posts,
     }
   }
 })
 
 const Post = (props) => {
-  const posts = props.data.posts.posts
-  console.log(posts)
+  const posts = props.posts
 
   return (
     <>
